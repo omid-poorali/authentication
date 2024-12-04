@@ -21,11 +21,6 @@ export const startTheServer = () => {
 
   const serve = () => app.listen(port, () => {
     logger.info(`Express server started at http://localhost:${port}`);
-
-    if (process.env.NODE_ENV === 'development') {
-      // This route is only present in development mode
-      logger.info(`Swagger UI hosted at http://localhost:${port}/dev/api-docs`);
-    }
   });
 
 
