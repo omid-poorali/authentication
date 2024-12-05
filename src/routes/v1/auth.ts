@@ -1,5 +1,6 @@
 import type { CookieOptions, Request, Response } from 'express';
 import { BadRequestError, ConflictError, UnauthorizedError } from '@/application';
+import { onlyUsers } from '@/middlewares';
 import { z } from 'zod';
 import config from "config";
 import redisClient from '@/libs/redis';
@@ -30,11 +31,10 @@ export const register = Utils.Route.create({
       throw new ConflictError("You have already registered!");
     };
 
-    const newUser = await Models.User.create({ username, password });
+    await Models.User.create({ username, password });
 
     res.status(201).json({
-      message: "success",
-      data: newUser
+      message: "success"
     });
   }
 });
@@ -85,31 +85,26 @@ export const login = Utils.Route.create({
 
 const refreshTokenValidation = z.object({
   cookies: z.object({
-    refreshToken: z.string({ required_error: 'refreshToken is required' }),
-    accessToken: z.string({ required_error: 'accessToken is required' }),
+    refreshToken: z.string({ required_error: 'refreshToken is required' })
   }),
 });
 
 export const refreshToken = Utils.Route.create({
   method: "post",
   path: '/auth/refresh-token',
+  middleWares: [onlyUsers()],
   handler: async (req: Request, res: Response) => {
     const {
       cookies
     } = Utils.Route.validateRequest(refreshTokenValidation, req);
 
-    const decoded = Utils.JWT.decodeAccessToken(cookies.accessToken) as AccessTokenPayload;
-
-    if (!decoded) throw new UnauthorizedError("accessToken is not valid!");
-
-    const refreshToken = await redisClient.get(`users?id=${decoded.id}`);
+    const refreshToken = await redisClient.get(`users?id=${req.payload.id}`);
 
     if (refreshToken !== cookies.refreshToken) {
-      res.clearCookie("refreshToken");
       throw new UnauthorizedError("refreshToken is not valid!");
     }
 
-    const accessToken = Utils.JWT.generateAccessToken(decoded.id, decoded.role);
+    const accessToken = Utils.JWT.generateAccessToken(req.payload.id, req.payload.role);
 
     res.status(200).json({
       message: "success",
