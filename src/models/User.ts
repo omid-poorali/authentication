@@ -31,8 +31,8 @@ const userSchema = new mongoose.Schema<UserDoc>(
             maxLength: [40, 'Username too long'],
             validate: {
                 validator: async function (v: string): Promise<boolean> {
-                    let doc: any = await User.findOne({ username: v });
-                    // @ts-ignore
+                    const doc = await User.findOne({ username: v });
+                    // @ts-expect-error I don't know
                     if (doc) return this._id.toString() === doc._id.toString();
                     else return Boolean(!doc);
                 },

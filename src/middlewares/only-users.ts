@@ -19,7 +19,7 @@ export const onlyUsers = () => async (req: Request, res: Response, next: NextFun
 
     next();
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error(error);
     if (error instanceof JsonWebTokenError) {
       res.status(401).json({ message: error.message || "Unauthorized" });

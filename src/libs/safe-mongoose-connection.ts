@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose, { ConnectOptions } from 'mongoose';
 
 /** Callback for establishing or re-stablishing mongo connection */
@@ -119,7 +120,7 @@ export default class SafeMongooseConnection {
     if (this.isConnectedBefore && !this.shouldCloseConnection) {
       this.connectionTimeout = setTimeout(() => {
         this.startConnection();
-        this.connectionTimeout && clearTimeout(this.connectionTimeout);
+        if (this.connectionTimeout) clearTimeout(this.connectionTimeout);
       }, this.retryDelayMs);
       if (this.options.onConnectionRetry) {
         this.options.onConnectionRetry(this.options.mongoUrl);

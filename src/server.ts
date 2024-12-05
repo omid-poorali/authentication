@@ -43,7 +43,7 @@ export const startTheServer = () => {
 
   // Close the Mongoose connection, when receiving SIGINT
   process.on('SIGINT', async () => {
-    console.log('\n'); /* eslint-disable-line */
+    console.log('\n');  
     logger.info('Gracefully shutting down');
     logger.info('Closing the MongoDB connection');
     try {
