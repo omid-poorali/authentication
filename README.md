@@ -22,7 +22,7 @@ Free Open source REST API built with | Nodejs + Express + Mongodb ⚡️ Made wi
 - Express
 - MongoDB
 - JSON Web Token (JWT)
-- bcryptjs
+- bcrypt
 
 # Features
 
@@ -31,34 +31,6 @@ Free Open source REST API built with | Nodejs + Express + Mongodb ⚡️ Made wi
 - Complete user authentication
 - Users can sign in
 - Users can sign out
-
-
-# API_Reference
-
-
-#### User signup
-
-```http
-  POST https://localhost:8080/api/v1/auth/signup
-```
-
-| Parameter         | Type      | Description   |
-| :---------------- | :-------- | :------------ |
-| `username`        | `string`  | **Required**. |
-| `password`        | `string`  | **Required**. |
-
-
-#### User Login
-
-```http
-  POST https://localhost:8080/api/v1/auth/login
-```
-
-| Parameter  | Type     | Description   |
-| :--------- | :------- | :------------ |
-| `username` | `string` | **Required**. |
-| `password` | `string` | **Required**. |
-
 
 # Environment
 
@@ -81,34 +53,3 @@ https://www.linkedin.com/in/omid-poorali
 
 Github
 https://github.com/omid-poorali
-
-
-# Run_Locally
-
-Clone the project
-
-```bash
-https://github.com/omid-poorali/authentication.git
-```
-
-Go to the project directory
-
-```bash
-  cd authentication
-```
-
-Install dependencies
-
-```bash
-yarn install
-# or
-npm install
-```
-
-Start the server
-
-```bash
-  node app.js
-  or
-  nodemon app.js
-```
