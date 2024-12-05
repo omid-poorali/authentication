@@ -1,6 +1,5 @@
 import type { Application, Request, Response } from 'express';
 import express from 'express';
-import morgan from 'morgan';
 import * as Middlewares from '@/middlewares';
 import * as Routes from '@/routes';
 
@@ -8,7 +7,7 @@ export const application = (): Application => {
   const app: Application = express();
   app.use(Middlewares.HTTPSecurity);
   app.use(Middlewares.CORSHandler);
-  app.use(morgan('dev'));
+  app.use(Middlewares.HTTPLogger);
 
   // parse requests of content-type - application/json
   app.use(express.json());
