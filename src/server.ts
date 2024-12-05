@@ -3,13 +3,10 @@ import { application } from '@/application';
 import SafeMongooseConnection from '@/libs/safe-mongoose-connection';
 import logger from '@/libs/logger';
 import config from "config";
-import SafeRedisConnection from './libs/safe-redis-connection';
+import redisClient from '@/libs/redis';
 
 export const startTheServer = () => {
   dotenv.config();
-
-  const port = config.get<number>("host.port") || 8080;
-  const app = application();
 
   const mongoUrl = config.get<string>("mongo.url");
   const redisUrl = config.get<string>("redis.url");
@@ -21,12 +18,8 @@ export const startTheServer = () => {
     onConnectionRetry: mongoUrl => logger.info(`Retrying to MongoDB at ${mongoUrl}`)
   });
 
-  const safeRedisConnection = new SafeRedisConnection({
-    redisUrl: redisUrl ?? '',
-    onStartConnection: redisUrl => logger.info(`Connecting to Redis at ${redisUrl}`),
-    onConnectionError: (error) => logger.error(error),
-    onConnectionRetry: redisUrl => logger.info(`Retrying to Redis at ${redisUrl}`)
-  });
+  const port = config.get<number>("host.port") || 8080;
+  const app = application();
 
   app.listen(port, () => {
     logger.info(`Express server started at http://localhost:${port}`);
@@ -45,9 +38,7 @@ export const startTheServer = () => {
     safeMongooseConnection.connect(mongoUrl => {
       logger.info(`Connected to MongoDB at ${mongoUrl}`);
     });
-    safeRedisConnection.connect(redisUrl => {
-      logger.info(`Connected to Redis at ${redisUrl}`);
-    });
+    redisClient.connect();
   }
 
   // Close the Mongoose connection, when receiving SIGINT
@@ -57,7 +48,7 @@ export const startTheServer = () => {
     logger.info('Closing the MongoDB connection');
     try {
       await safeMongooseConnection.close(true);
-      await safeRedisConnection.close();
+      await redisClient.disconnect();
       logger.info('Mongo connection closed successfully');
     } catch (error) {
       logger.error(error);

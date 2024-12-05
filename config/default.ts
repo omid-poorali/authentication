@@ -26,7 +26,7 @@ export default {
   },
   jwt: {
     secretKey: envs.JWT_SECRET,
-    expiresIn: '10m'
+    expiresIn: '5m'
   },
   cors: {
     options: {
