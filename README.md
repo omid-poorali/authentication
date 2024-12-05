@@ -9,7 +9,6 @@ Free Open source REST API built with | Nodejs + Express + Mongodb ⚡️ Made wi
 - [Contributing](#Contributing)
 - [Features](#Features)
 - [Feedback](#Feedback)
-- [Run Locally](#Run_Locally)
 - [Environment Variables](#Environment)
 
 # Author
