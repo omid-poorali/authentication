@@ -12,9 +12,15 @@ const refreshTokenCookieOptions = config.get<CookieOptions>('cookie.refreshToken
 
 const registerValidation = z.object({
   body: z.object({
-    username: z.string({ required_error: 'username is required' }),
-    password: z.string({ required_error: 'password is required' }),
-  }),
+    username: z.string({ required_error: 'username is required' })
+      .trim()
+      .min(8, "username is too short")
+      .max(40, "username is too long")
+      .toLowerCase(),
+    password: z.string({ required_error: 'password is required' })
+      .min(8, "password is too short")
+      .max(120, "password is too long"),
+  })
 });
 
 export const register = Utils.Route.create({
@@ -41,9 +47,15 @@ export const register = Utils.Route.create({
 
 const loginValidation = z.object({
   body: z.object({
-    username: z.string({ required_error: 'username is required' }),
+    username: z.string({ required_error: 'username is required' })
+      .trim()
+      .min(8, "username is too short")
+      .max(40, "username is too long")
+      .toLowerCase(),
     password: z.string({ required_error: 'password is required' })
-  }),
+      .min(8, "password is too short")
+      .max(120, "password is too long"),
+  })
 });
 
 export const login = Utils.Route.create({
