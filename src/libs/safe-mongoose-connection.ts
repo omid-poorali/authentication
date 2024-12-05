@@ -116,7 +116,7 @@ export default class SafeMongooseConnection {
 
   /** Handler called when mongo connection is lost */
   private onDisconnected = () => {
-    if (!this.isConnectedBefore && !this.shouldCloseConnection) {
+    if (this.isConnectedBefore && !this.shouldCloseConnection) {
       this.connectionTimeout = setTimeout(() => {
         this.startConnection();
         this.connectionTimeout && clearTimeout(this.connectionTimeout);
